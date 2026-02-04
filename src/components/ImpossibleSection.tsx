@@ -4,9 +4,27 @@ import { impossibleSectionContent } from '@/data/copy';
 
 interface ImpossibleSectionProps {
   userChallenge?: string;
+  aiResponse?: string;
+  isLoading?: boolean;
 }
 
-export function ImpossibleSection({ userChallenge }: ImpossibleSectionProps) {
+function ResponseShimmer() {
+  return (
+    <div className="space-y-3 animate-pulse">
+      <div className="h-4 bg-white/10 rounded w-full" />
+      <div className="h-4 bg-white/10 rounded w-full" />
+      <div className="h-4 bg-white/10 rounded w-5/6" />
+      <div className="h-4 bg-white/10 rounded w-full mt-4" />
+      <div className="h-4 bg-white/10 rounded w-3/4" />
+    </div>
+  );
+}
+
+export function ImpossibleSection({
+  userChallenge,
+  aiResponse,
+  isLoading,
+}: ImpossibleSectionProps) {
   return (
     <section className="py-12 md:py-16">
       <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-3xl p-8 md:p-12 text-white">
@@ -22,16 +40,33 @@ export function ImpossibleSection({ userChallenge }: ImpossibleSectionProps) {
           </div>
         )}
 
-        {/* Intro text */}
-        <p className="text-lg md:text-xl text-slate-300 mb-8">
-          {impossibleSectionContent.intro}
-        </p>
+        {/* AI-personalized response OR default content */}
+        {isLoading ? (
+          <div className="mb-10">
+            <ResponseShimmer />
+          </div>
+        ) : aiResponse ? (
+          <div className="mb-10">
+            <div className="space-y-4 text-lg text-slate-300 leading-relaxed">
+              {aiResponse.split(/\n\n+/).map((paragraph, i) => (
+                <p key={i}>{paragraph}</p>
+              ))}
+            </div>
+          </div>
+        ) : (
+          <>
+            {/* Fallback: default intro text */}
+            <p className="text-lg md:text-xl text-slate-300 mb-8">
+              {impossibleSectionContent.intro}
+            </p>
+          </>
+        )}
 
-        {/* Examples */}
+        {/* Examples - always show these */}
         <div className="mb-10">
           <h3 className="text-lg font-semibold text-white mb-4">
-            Here are some &quot;impossible&quot; things we&apos;ve already built in
-            HighLevel:
+            Here are some &quot;impossible&quot; things we&apos;ve already built
+            in HighLevel:
           </h3>
           <ul className="space-y-3">
             {impossibleSectionContent.examples.map((example, i) => (

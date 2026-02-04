@@ -110,3 +110,11 @@ export interface QuizResult {
   recommendedSystems: string[];
   timestamp: string;
 }
+
+// AI-generated blueprint content
+export interface AIBlueprintContent {
+  personalizedIntro: string;
+  systemInsights: string[];
+  impossibleResponse: string;
+  closingMessage: string;
+}
