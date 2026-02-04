@@ -1,141 +1,163 @@
 'use client';
 
+import { useState } from 'react';
 import { SystemRecommendation } from '@/types/quiz';
 import { cn } from '@/lib/utils';
 
 interface SystemCardProps {
   system: SystemRecommendation;
   index: number;
+  aiInsight?: string;
+  isLoadingInsight?: boolean;
 }
 
-export function SystemCard({ system, index }: SystemCardProps) {
+function InsightShimmer() {
+  return (
+    <div className="space-y-3 animate-pulse">
+      <div className="h-4 bg-slate-200 rounded w-full" />
+      <div className="h-4 bg-slate-200 rounded w-full" />
+      <div className="h-4 bg-slate-200 rounded w-4/5" />
+    </div>
+  );
+}
+
+export function SystemCard({
+  system,
+  index,
+  aiInsight,
+  isLoadingInsight,
+}: SystemCardProps) {
+  const [showDetails, setShowDetails] = useState(false);
+
   return (
     <div className="bg-white rounded-2xl shadow-lg border border-slate-100 overflow-hidden">
       {/* Header */}
-      <div className="bg-gradient-to-r from-indigo-600 to-purple-600 px-6 py-4">
-        <div className="flex items-center gap-3">
-          <span className="flex items-center justify-center w-8 h-8 rounded-full bg-white/20 text-white font-bold text-sm">
+      <div className="bg-gradient-to-r from-indigo-600 to-purple-600 px-6 py-5">
+        <div className="flex items-center gap-4">
+          <span className="flex items-center justify-center w-10 h-10 rounded-full bg-white/20 text-white font-bold text-lg">
             {index + 1}
           </span>
-          <h3 className="text-xl font-bold text-white">{system.name}</h3>
+          <div>
+            <h3 className="text-xl md:text-2xl font-bold text-white">
+              {system.name}
+            </h3>
+            <div className="flex items-center gap-4 mt-1 text-indigo-200 text-sm">
+              <span>{system.timeSaved} saved</span>
+              <span>|</span>
+              <span>{system.priceRange}</span>
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* Content */}
-      <div className="p-6 space-y-6">
-        {/* Description */}
-        <p className="text-slate-600 leading-relaxed">{system.description}</p>
-
-        {/* What it replaces */}
-        <div>
-          <h4 className="font-semibold text-slate-800 mb-3 flex items-center gap-2">
-            <svg
-              className="w-5 h-5 text-red-500"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth={2}
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
-            What it replaces:
-          </h4>
-          <ul className="space-y-2">
-            {system.replaces.map((item, i) => (
-              <li key={i} className="flex items-start gap-2 text-slate-600">
-                <span className="text-red-400 mt-1">-</span>
-                <span>{item}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        {/* What it includes */}
-        <div>
-          <h4 className="font-semibold text-slate-800 mb-3 flex items-center gap-2">
-            <svg
-              className="w-5 h-5 text-green-500"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth={2}
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M5 13l4 4L19 7"
-              />
-            </svg>
-            What it includes:
-          </h4>
-          <ul className="space-y-2">
-            {system.includes.map((item, i) => (
-              <li key={i} className="flex items-start gap-2 text-slate-600">
-                <svg
-                  className="w-4 h-4 text-green-500 mt-1 flex-shrink-0"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth={2}
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M5 13l4 4L19 7"
-                  />
-                </svg>
-                <span>{item}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        {/* Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-4 border-t border-slate-100">
-          <div className="text-center p-3 bg-indigo-50 rounded-xl">
-            <div className="text-sm text-slate-500 mb-1">Time Saved</div>
-            <div className="font-semibold text-indigo-600">{system.timeSaved}</div>
+      <div className="p-6 md:p-8">
+        {/* AI personalized insight — the main content */}
+        {isLoadingInsight ? (
+          <div className="mb-6">
+            <InsightShimmer />
           </div>
-          <div className="text-center p-3 bg-purple-50 rounded-xl">
-            <div className="text-sm text-slate-500 mb-1">Complexity</div>
-            <div className="font-semibold text-purple-600">{system.complexity}</div>
-          </div>
-          <div className="text-center p-3 bg-emerald-50 rounded-xl">
-            <div className="text-sm text-slate-500 mb-1">Investment</div>
-            <div className="font-semibold text-emerald-600">{system.priceRange}</div>
-          </div>
-        </div>
-
-        {/* Real example */}
-        <div className="bg-gradient-to-r from-slate-50 to-indigo-50/50 rounded-xl p-4 border border-slate-100">
-          <div className="flex items-start gap-3">
-            <div className="flex-shrink-0 w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center">
-              <svg
-                className="w-4 h-4 text-indigo-600"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={2}
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
-                />
-              </svg>
+        ) : aiInsight ? (
+          <div className="mb-6">
+            <div className="space-y-4 text-slate-700 text-base md:text-lg leading-relaxed">
+              {aiInsight.split(/\n\n+/).map((paragraph, i) => (
+                <p key={i}>{paragraph}</p>
+              ))}
             </div>
-            <div>
-              <div className="text-sm font-medium text-slate-500 mb-1">
-                Real example:
+          </div>
+        ) : (
+          /* Fallback: show the static description if no AI */
+          <p className="text-slate-600 leading-relaxed mb-6">
+            {system.description}
+          </p>
+        )}
+
+        {/* Real example — social proof */}
+        <div className="bg-slate-50 rounded-xl p-4 mb-6 border-l-4 border-indigo-500">
+          <p className="text-slate-700 italic">
+            &quot;{system.realExample}&quot;
+          </p>
+        </div>
+
+        {/* Expandable details */}
+        <button
+          onClick={() => setShowDetails(!showDetails)}
+          className="flex items-center gap-2 text-indigo-600 font-medium hover:text-indigo-700 transition-colors duration-200"
+        >
+          <svg
+            className={cn(
+              'w-4 h-4 transition-transform duration-200',
+              showDetails && 'rotate-90'
+            )}
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth={2}
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M9 5l7 7-7 7"
+            />
+          </svg>
+          {showDetails ? 'Hide' : 'See'} what this replaces & includes
+        </button>
+
+        {showDetails && (
+          <div className="mt-4 pt-4 border-t border-slate-100 space-y-6 animate-in fade-in duration-200">
+            {/* Two-column layout on desktop */}
+            <div className="grid md:grid-cols-2 gap-6">
+              {/* What it replaces */}
+              <div>
+                <h4 className="font-semibold text-slate-800 mb-3 text-sm uppercase tracking-wide text-red-600">
+                  What it replaces
+                </h4>
+                <ul className="space-y-2">
+                  {system.replaces.map((item, i) => (
+                    <li
+                      key={i}
+                      className="flex items-start gap-2 text-slate-600 text-sm"
+                    >
+                      <span className="text-red-400 mt-0.5 flex-shrink-0">
+                        &times;
+                      </span>
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
               </div>
-              <p className="text-slate-700 italic">&quot;{system.realExample}&quot;</p>
+
+              {/* What it includes */}
+              <div>
+                <h4 className="font-semibold text-slate-800 mb-3 text-sm uppercase tracking-wide text-green-600">
+                  What it includes
+                </h4>
+                <ul className="space-y-2">
+                  {system.includes.map((item, i) => (
+                    <li
+                      key={i}
+                      className="flex items-start gap-2 text-slate-600 text-sm"
+                    >
+                      <svg
+                        className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth={2}
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M5 13l4 4L19 7"
+                        />
+                      </svg>
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );

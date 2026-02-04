@@ -15,31 +15,25 @@ interface ResultsPageProps {
   result: QuizResult;
 }
 
-// Cache key for AI content in localStorage
 function getAICacheKey(resultId: string): string {
   return `blueprint-ai-${resultId}`;
 }
 
-// Loading shimmer component
-function TextShimmer({ lines = 3, className }: { lines?: number; className?: string }) {
+function HeroShimmer() {
   return (
-    <div className={cn('space-y-3 animate-pulse', className)}>
-      {Array.from({ length: lines }).map((_, i) => (
-        <div
-          key={i}
-          className={cn(
-            'h-4 bg-white/20 rounded',
-            i === lines - 1 ? 'w-3/4' : 'w-full'
-          )}
-        />
-      ))}
+    <div className="space-y-4 animate-pulse">
+      <div className="h-5 bg-white/15 rounded w-full" />
+      <div className="h-5 bg-white/15 rounded w-full" />
+      <div className="h-5 bg-white/15 rounded w-3/4" />
+      <div className="h-5 bg-white/10 rounded w-full mt-6" />
+      <div className="h-5 bg-white/10 rounded w-5/6" />
     </div>
   );
 }
 
-function ContentShimmer({ className }: { className?: string }) {
+function ContentShimmer() {
   return (
-    <div className={cn('space-y-3 animate-pulse', className)}>
+    <div className="space-y-3 animate-pulse">
       <div className="h-4 bg-slate-200 rounded w-full" />
       <div className="h-4 bg-slate-200 rounded w-full" />
       <div className="h-4 bg-slate-200 rounded w-5/6" />
@@ -56,25 +50,19 @@ export function ResultsPage({ result }: ResultsPageProps) {
   const [aiError, setAiError] = useState(false);
   const [copied, setCopied] = useState(false);
 
-  // Get the actual system objects
   const systemObjects = recommendedSystems
     .map((id) => systems.find((s) => s.id === id))
     .filter((s) => s !== undefined);
 
-  // Fallback intro (template-based) in case AI fails
   const fallbackIntro = generatePersonalizedIntro(responses);
 
-  // Get business type label
   const businessType = responses.businessModel
     ? businessModelLabels[responses.businessModel]
     : 'business owner';
 
-  // Get shareable URL
   const shareUrl = getResultsUrl(result.id);
 
-  // Fetch AI-generated content
   const fetchAIContent = useCallback(async () => {
-    // Check localStorage cache first
     const cacheKey = getAICacheKey(result.id);
     const cached = localStorage.getItem(cacheKey);
     if (cached) {
@@ -108,15 +96,12 @@ export function ResultsPage({ result }: ResultsPageProps) {
         }),
       });
 
-      if (!response.ok) {
-        throw new Error('AI generation failed');
-      }
+      if (!response.ok) throw new Error('AI generation failed');
 
       const data = await response.json();
 
       if (data.success && data.content) {
         setAiContent(data.content);
-        // Cache it
         localStorage.setItem(cacheKey, JSON.stringify(data.content));
       } else {
         throw new Error('Invalid AI response');
@@ -133,14 +118,12 @@ export function ResultsPage({ result }: ResultsPageProps) {
     fetchAIContent();
   }, [fetchAIContent]);
 
-  // Handle copy link
   const handleCopyLink = () => {
     navigator.clipboard.writeText(shareUrl);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
 
-  // Render paragraphs from a string (split on double newlines)
   const renderParagraphs = (text: string, className?: string) => {
     return text.split(/\n\n+/).map((paragraph, i) => (
       <p key={i} className={cn('leading-relaxed', className)}>
@@ -151,28 +134,63 @@ export function ResultsPage({ result }: ResultsPageProps) {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-indigo-50/30 to-purple-50/30">
-      {/* Hero Section */}
-      <header className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-12 md:py-20">
-        <div className="container mx-auto px-4">
-          <div className="max-w-3xl mx-auto text-center">
-            <p className="text-indigo-200 mb-3">Your custom build blueprint</p>
-            <h1 className="text-3xl md:text-5xl font-bold mb-8">
-              Hey {userInfo.firstName}, here&apos;s what we&apos;d build for you
+      {/* Hero — personal note, not a product page */}
+      <header className="bg-gradient-to-br from-indigo-700 via-purple-700 to-indigo-800 text-white">
+        <div className="container mx-auto px-4 py-16 md:py-24">
+          <div className="max-w-3xl mx-auto">
+            {/* From line */}
+            <div className="flex items-center gap-3 mb-8">
+              <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center text-sm font-bold">
+                TFF
+              </div>
+              <div>
+                <p className="text-sm text-indigo-200">
+                  From Kylee + Sami at The Funnel Flippers
+                </p>
+                <p className="text-xs text-indigo-300">
+                  Your personalized build blueprint
+                </p>
+              </div>
+            </div>
+
+            {/* Headline */}
+            <h1 className="text-3xl md:text-5xl font-bold mb-8 leading-tight">
+              {userInfo.firstName}, we read every answer.
+              <br />
+              <span className="text-cyan-400">
+                Here&apos;s what we&apos;d build for you.
+              </span>
             </h1>
 
-            {/* AI-generated intro or fallback */}
-            <div className="text-left md:text-center space-y-4">
+            {/* AI intro or fallback */}
+            <div className="space-y-4 text-lg md:text-xl">
               {aiLoading ? (
-                <TextShimmer lines={5} />
+                <HeroShimmer />
               ) : aiContent?.personalizedIntro ? (
-                <div className="space-y-4 text-lg md:text-xl text-indigo-100">
-                  {renderParagraphs(aiContent.personalizedIntro, 'text-indigo-100')}
+                <div className="space-y-4 text-indigo-100">
+                  {renderParagraphs(
+                    aiContent.personalizedIntro,
+                    'text-indigo-100'
+                  )}
                 </div>
               ) : (
-                <p className="text-lg md:text-xl text-indigo-100 leading-relaxed">
+                <p className="text-indigo-100 leading-relaxed">
                   {fallbackIntro}
                 </p>
               )}
+            </div>
+          </div>
+        </div>
+
+        {/* Credibility strip */}
+        <div className="border-t border-white/10 bg-white/5">
+          <div className="container mx-auto px-4 py-4">
+            <div className="max-w-3xl mx-auto flex flex-wrap items-center justify-center gap-x-8 gap-y-2 text-sm text-indigo-200">
+              <span>Hundreds of HighLevel builds delivered</span>
+              <span className="hidden sm:inline">|</span>
+              <span>Coaches, agencies, course creators</span>
+              <span className="hidden sm:inline">|</span>
+              <span>We build what others say is impossible</span>
             </div>
           </div>
         </div>
@@ -181,71 +199,44 @@ export function ResultsPage({ result }: ResultsPageProps) {
       <main className="container mx-auto px-4 py-12 md:py-16">
         {/* Systems Section */}
         <section className="mb-16">
-          <div className="text-center mb-10">
-            <h2 className="text-3xl md:text-4xl font-bold text-slate-800 mb-4">
-              The 3 Systems We&apos;d Build For Your{' '}
-              {businessType.charAt(0).toUpperCase() + businessType.slice(1)}{' '}
-              Business
+          <div className="max-w-3xl mx-auto mb-10">
+            <h2 className="text-2xl md:text-3xl font-bold text-slate-800 mb-3">
+              Here&apos;s what we&apos;d build for your {businessType}{' '}
+              business
             </h2>
-            <p className="text-lg text-slate-600 max-w-2xl mx-auto">
-              Based on your answers, these are the automation systems that would
-              have the biggest impact on your business.
+            <p className="text-slate-600">
+              We picked these three based on everything you told us — your pain
+              points, what you want your business to feel like, and where
+              you&apos;re trying to go. This isn&apos;t a generic list.
             </p>
           </div>
 
-          <div className="space-y-8">
+          <div className="max-w-3xl mx-auto space-y-8">
             {systemObjects.map((system, index) => (
-              <div key={system.id}>
-                <SystemCard system={system} index={index} />
-
-                {/* AI insight for this system */}
-                <div className="mt-4 mx-4 md:mx-8">
-                  {aiLoading ? (
-                    <div className="bg-gradient-to-r from-indigo-50 to-purple-50 rounded-xl p-6 border border-indigo-100">
-                      <ContentShimmer />
-                    </div>
-                  ) : aiContent?.systemInsights?.[index] ? (
-                    <div className="bg-gradient-to-r from-indigo-50 to-purple-50 rounded-xl p-6 border border-indigo-100">
-                      <div className="flex items-start gap-3 mb-3">
-                        <div className="flex-shrink-0 w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center">
-                          <svg
-                            className="w-4 h-4 text-indigo-600"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                            strokeWidth={2}
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                            />
-                          </svg>
-                        </div>
-                        <h4 className="font-semibold text-indigo-700">
-                          Why this matters for you specifically
-                        </h4>
-                      </div>
-                      <div className="space-y-3 text-slate-700 pl-11">
-                        {renderParagraphs(aiContent.systemInsights[index])}
-                      </div>
-                    </div>
-                  ) : null}
-                </div>
-              </div>
+              <SystemCard
+                key={system.id}
+                system={system}
+                index={index}
+                aiInsight={aiContent?.systemInsights?.[index]}
+                isLoadingInsight={aiLoading}
+              />
             ))}
           </div>
         </section>
 
-        {/* Impossible Section - now with AI response */}
-        <ImpossibleSection
-          userChallenge={responses.impossibleChallenge}
-          aiResponse={aiContent?.impossibleResponse}
-          isLoading={aiLoading}
-        />
+        {/* Impossible Section */}
+        <div className="max-w-3xl mx-auto">
+          <ImpossibleSection
+            userChallenge={responses.impossibleChallenge}
+            aiResponse={aiContent?.impossibleResponse}
+            isLoading={aiLoading}
+          />
+        </div>
 
         {/* CTA Section */}
-        <CTASection responses={responses} />
+        <div className="max-w-4xl mx-auto">
+          <CTASection responses={responses} />
+        </div>
 
         {/* AI Closing Message */}
         {(aiLoading || aiContent?.closingMessage) && (
@@ -291,7 +282,6 @@ export function ResultsPage({ result }: ResultsPageProps) {
               </button>
             </div>
 
-            {/* Retry button if AI failed */}
             {aiError && (
               <div className="mt-6">
                 <p className="text-slate-500 text-sm mb-2">

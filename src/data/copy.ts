@@ -49,7 +49,7 @@ export function generatePersonalizedIntro(responses: QuizResponses): string {
 
   switch (responses.businessModel) {
     case 'coach':
-      return `Based on your answers, you're a coach spending way too much time on ${topPainPoints.join(' and ') || 'manual tasks'}, when you should be focused on ${topDreamState}. You want ${experienceLabel}, and you're wondering if ${impossibleChallenge.length > 50 ? impossibleChallenge.slice(0, 50) + '...' : impossibleChallenge} is even possible. Good news: It is. And here's how we'd build it.`;
+      return `Based on your answers, you're a coach spending way too much time on ${topPainPoints.join(' and ') || 'manual tasks'}, when you should be focused on ${topDreamState}. You want ${experienceLabel}, and you've got ideas about what should be automated that most people think are impossible. Good news: they're not. And here's how we'd build it.`;
 
     case 'course_creator':
       return `You're delivering content and building community, but you're probably manually doing a lot of what should run on autopilot. You want ${experienceLabel}, and based on your answers, you're dealing with ${topPainPoints.join(' and ') || 'too much manual work'}. Here's what we'd build to fix that.`;
