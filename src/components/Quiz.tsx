@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useCallback } from 'react';
+import { useEffect, useCallback, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ProgressBar } from './ProgressBar';
 import { RadioQuestion } from './RadioQuestion';
@@ -23,6 +23,7 @@ import {
 
 export function Quiz() {
   const router = useRouter();
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const {
     currentQuestion,
     responses,
@@ -111,7 +112,8 @@ export function Quiz() {
 
   // Handle email capture submission
   const handleEmailSubmit = useCallback(
-    (data: { firstName: string; email: string; phone?: string }) => {
+    async (data: { firstName: string; email: string; phone?: string }) => {
+      setIsSubmitting(true);
       setUserInfo(data);
 
       // Generate the result
@@ -120,10 +122,40 @@ export function Quiz() {
       // Save to localStorage
       saveResult(result.id, result);
 
-      // Navigate to results page
+      // Submit to HighLevel API (non-blocking - don't wait for it)
+      try {
+        fetch('/api/submit-quiz', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            firstName: data.firstName,
+            email: data.email,
+            phone: data.phone,
+            businessModel: responses.businessModel,
+            painPoints: responses.painPoints,
+            dreamState: responses.dreamState,
+            impossibleChallenge: responses.impossibleChallenge,
+            platformCount: responses.platformCount,
+            buildingFor: responses.buildingFor,
+            experienceType: responses.experienceType,
+            investmentLevel: responses.investmentLevel,
+            resultId: result.id,
+            recommendedSystems: result.recommendedSystems,
+          }),
+        }).catch((err) => {
+          // Log but don't block the user experience
+          console.error('HighLevel submission error:', err);
+        });
+      } catch (err) {
+        console.error('HighLevel submission error:', err);
+      }
+
+      // Navigate to results page immediately (don't wait for API)
       router.push(`/blueprint/${result.id}`);
     },
-    [setUserInfo, generateResult, router]
+    [setUserInfo, generateResult, router, responses]
   );
 
   // Get current answer value(s)
@@ -167,7 +199,7 @@ export function Quiz() {
   // Render the current question
   const renderQuestion = () => {
     if (isEmailCapture) {
-      return <EmailCapture onSubmit={handleEmailSubmit} />;
+      return <EmailCapture onSubmit={handleEmailSubmit} isLoading={isSubmitting} />;
     }
 
     if (!currentQ) return null;
