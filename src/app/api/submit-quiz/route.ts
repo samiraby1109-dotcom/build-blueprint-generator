@@ -113,6 +113,14 @@ ${systemsFormatted}
 Blueprint URL: ${process.env.NEXT_PUBLIC_APP_URL || ''}/blueprint/${data.resultId}
     `.trim();
 
+    // Custom field for result ID - uses the field key
+    const customFields = [
+      {
+        key: 'blueprint_result_id',
+        field_value: data.resultId,
+      },
+    ];
+
     // Create/update contact in HighLevel
     const contactPayload = {
       firstName: data.firstName,
@@ -121,10 +129,7 @@ Blueprint URL: ${process.env.NEXT_PUBLIC_APP_URL || ''}/blueprint/${data.resultI
       locationId: locationId,
       tags: ['[LM] Build Blueprint Generator'],
       source: 'Build Blueprint Generator',
-      customFields: [
-        // You can add custom field mappings here if you have them set up in HighLevel
-        // { id: 'your_custom_field_id', value: data.businessModel }
-      ],
+      customFields: customFields,
     };
 
     // First, try to find existing contact by email
@@ -150,7 +155,7 @@ Blueprint URL: ${process.env.NEXT_PUBLIC_APP_URL || ''}/blueprint/${data.resultI
     }
 
     if (contactId) {
-      // Update existing contact - add tag and update notes
+      // Update existing contact - add tag, custom field, and notes
       const updateResponse = await fetch(
         `${HIGHLEVEL_API_URL}/contacts/${contactId}`,
         {
@@ -164,6 +169,7 @@ Blueprint URL: ${process.env.NEXT_PUBLIC_APP_URL || ''}/blueprint/${data.resultI
             firstName: data.firstName,
             phone: data.phone || undefined,
             tags: ['[LM] Build Blueprint Generator'],
+            customFields: customFields,
           }),
         }
       );
@@ -228,9 +234,8 @@ Blueprint URL: ${process.env.NEXT_PUBLIC_APP_URL || ''}/blueprint/${data.resultI
     return NextResponse.json({
       success: true,
       contactId,
-      message: 'Contact created/updated successfully'
+      message: 'Contact created/updated successfully',
     });
-
   } catch (error) {
     console.error('API error:', error);
     return NextResponse.json(
