@@ -1,163 +1,165 @@
 'use client';
 
+import Image from 'next/image';
+
 interface LandingPageProps {
   onStartQuiz: () => void;
 }
 
 export function LandingPage({ onStartQuiz }: LandingPageProps) {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-indigo-950 to-purple-950 text-white">
+    <div className="min-h-screen bg-white">
       {/* Nav */}
-      <nav className="container mx-auto px-4 py-6" role="navigation" aria-label="Main navigation">
-        <div className="flex items-center gap-3">
-          <div
-            className="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center text-sm font-bold"
-            aria-hidden="true"
-          >
-            TFF
+      <nav className="border-b border-slate-100" role="navigation" aria-label="Main navigation">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4">
+          <div className="flex items-center gap-3">
+            <div
+              className="w-9 h-9 rounded-full bg-[#4ECDC4] flex items-center justify-center text-xs font-bold text-white"
+              aria-hidden="true"
+            >
+              TFF
+            </div>
+            <span className="font-semibold text-slate-800 text-sm sm:text-base">The Funnel Flippers</span>
           </div>
-          <span className="font-semibold text-white/90">The Funnel Flippers</span>
         </div>
       </nav>
 
-      {/* Hero */}
-      <header className="container mx-auto px-4 pt-12 pb-16 md:pt-20 md:pb-24">
-        <div className="max-w-3xl mx-auto text-center">
-          <p className="inline-block px-4 py-1.5 rounded-full bg-indigo-500/20 text-indigo-300 text-sm font-medium mb-6 border border-indigo-500/30">
-            Free personalized blueprint — takes 2 minutes
-          </p>
+      {/* Hero Section */}
+      <header className="container mx-auto px-4 sm:px-6 lg:px-8 pt-12 sm:pt-16 md:pt-20 pb-12 md:pb-16">
+        <div className="max-w-6xl mx-auto">
+          <div className="grid lg:grid-cols-5 gap-10 lg:gap-16 items-start">
+            {/* Left: Copy */}
+            <div className="lg:col-span-3">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-[3.25rem] font-bold text-slate-900 leading-tight mb-6">
+                The HighLevel Build Blueprint Generator
+              </h1>
 
-          <h1 className="text-4xl md:text-6xl font-bold leading-tight mb-6">
-            Find out what we&apos;d
-            <span className="block text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-indigo-400">
-              build for your business
-            </span>
-          </h1>
+              <p className="text-lg sm:text-xl text-slate-600 leading-relaxed mb-10 max-w-2xl">
+                Find out what&apos;s possible when you stop settling for templates and start building systems that actually work for YOUR business
+              </p>
 
-          <p className="text-lg md:text-xl text-slate-300 mb-10 max-w-2xl mx-auto leading-relaxed">
-            Answer 8 quick questions and get a custom blueprint showing the
-            exact HighLevel systems we&apos;d build to automate your business.
-            No fluff, no generic advice — just what actually needs to happen.
-          </p>
+              {/* CTA — visible on mobile before the body copy */}
+              <div className="mb-10 sm:hidden">
+                <button
+                  onClick={onStartQuiz}
+                  className="w-full py-4 px-8 rounded-xl text-lg font-semibold bg-[#4ECDC4] text-white hover:bg-[#3DBDB5] transition-all duration-200 shadow-lg shadow-[#4ECDC4]/25 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#4ECDC4] focus-visible:ring-offset-2"
+                  aria-label="Start your build blueprint"
+                >
+                  Start Your Blueprint
+                </button>
+              </div>
+            </div>
 
-          <button
-            onClick={onStartQuiz}
-            className="inline-flex items-center gap-3 px-8 py-4 rounded-xl text-lg font-semibold bg-gradient-to-r from-indigo-500 to-purple-500 text-white hover:from-indigo-400 hover:to-purple-400 transition-all duration-200 shadow-xl shadow-indigo-500/25 hover:shadow-2xl hover:shadow-indigo-500/30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900"
-            aria-label="Start the Build Blueprint quiz"
-          >
-            Get My Build Blueprint
-            <svg
-              className="w-5 h-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth={2}
-              aria-hidden="true"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M13 7l5 5m0 0l-5 5m5-5H6"
-              />
-            </svg>
-          </button>
+            {/* Right: Photo */}
+            <div className="lg:col-span-2 hidden lg:block">
+              <div className="relative">
+                <div className="rounded-2xl overflow-hidden shadow-2xl shadow-[#4ECDC4]/10 border border-slate-100">
+                  <Image
+                    src="/sami-kylee.jpg"
+                    alt="Sami and Kylee, the HighLevel build experts behind The Funnel Flippers"
+                    width={600}
+                    height={500}
+                    className="w-full h-auto object-cover"
+                    priority
+                  />
+                </div>
+                <div className="absolute -bottom-4 -left-4 bg-white rounded-xl shadow-lg border border-slate-100 px-4 py-2.5">
+                  <p className="text-sm font-semibold text-slate-800">Kylee + Sami</p>
+                  <p className="text-xs text-[#4ECDC4] font-medium">HighLevel Build Experts</p>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </header>
 
-      {/* What You Get */}
-      <section className="container mx-auto px-4 pb-16 md:pb-24" aria-labelledby="what-you-get-heading">
-        <div className="max-w-4xl mx-auto">
-          <h2 id="what-you-get-heading" className="text-center text-sm font-semibold uppercase tracking-widest text-indigo-400 mb-10">
-            What you&apos;ll get in your blueprint
-          </h2>
+      {/* Body Copy Section */}
+      <section className="container mx-auto px-4 sm:px-6 lg:px-8 pb-12 md:pb-16">
+        <div className="max-w-3xl">
+          <div className="space-y-6 text-base sm:text-lg text-slate-700 leading-relaxed">
+            <p className="text-lg sm:text-xl font-medium text-slate-800">
+              Most people are using about 10% of what HighLevel can actually do.
+            </p>
 
-          <div className="grid md:grid-cols-3 gap-6">
-            <div className="bg-white/5 border border-white/10 rounded-2xl p-6 backdrop-blur-sm">
-              <div
-                className="w-12 h-12 rounded-xl bg-indigo-500/20 flex items-center justify-center mb-4"
-                aria-hidden="true"
-              >
-                <svg className="w-6 h-6 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 12h16.5m-16.5 3.75h16.5M3.75 19.5h16.5M5.625 4.5h12.75a1.875 1.875 0 010 3.75H5.625a1.875 1.875 0 010-3.75z" />
-                </svg>
-              </div>
-              <h3 className="font-semibold text-white mb-2">3 Custom Systems</h3>
-              <p className="text-sm text-slate-400 leading-relaxed">
-                The exact HighLevel systems we&apos;d build based on your business model, pain points, and goals.
-              </p>
-            </div>
+            <p>
+              Not because they&apos;re lazy. Not because they&apos;re not smart enough.
+            </p>
 
-            <div className="bg-white/5 border border-white/10 rounded-2xl p-6 backdrop-blur-sm">
-              <div
-                className="w-12 h-12 rounded-xl bg-purple-500/20 flex items-center justify-center mb-4"
-                aria-hidden="true"
-              >
-                <svg className="w-6 h-6 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-              </div>
-              <h3 className="font-semibold text-white mb-2">Time You&apos;ll Save</h3>
-              <p className="text-sm text-slate-400 leading-relaxed">
-                Real estimates of hours saved per week based on systems we&apos;ve built for businesses like yours.
-              </p>
-            </div>
+            <p>
+              But because nobody&apos;s shown them what&apos;s actually possible.
+            </p>
 
-            <div className="bg-white/5 border border-white/10 rounded-2xl p-6 backdrop-blur-sm">
-              <div
-                className="w-12 h-12 rounded-xl bg-cyan-500/20 flex items-center justify-center mb-4"
-                aria-hidden="true"
-              >
-                <svg className="w-6 h-6 text-cyan-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.455 2.456L21.75 6l-1.036.259a3.375 3.375 0 00-2.455 2.456z" />
-                </svg>
-              </div>
-              <h3 className="font-semibold text-white mb-2">AI-Personalized Insights</h3>
-              <p className="text-sm text-slate-400 leading-relaxed">
-                Not generic templates. We analyze your answers and tell you exactly what&apos;s broken and how to fix it.
-              </p>
-            </div>
+            <p>
+              We&apos;ve built systems that other HighLevel &quot;experts&quot; said were impossible.
+              We&apos;ve automated workflows that people thought required 3 different platforms.
+              We&apos;ve created client experiences so seamless that people assume our clients
+              have massive tech teams.
+            </p>
+
+            <p>And we&apos;ve done it all inside HighLevel.</p>
+
+            <p>
+              This Build Blueprint Generator will show you exactly what we could build for
+              YOUR specific business&mdash;whether you&apos;re:
+            </p>
+
+            <ul className="space-y-3 pl-1" role="list">
+              <li className="flex items-start gap-3">
+                <span className="inline-block w-2 h-2 rounded-full bg-[#4ECDC4] mt-2.5 flex-shrink-0" aria-hidden="true" />
+                <span>A coach/course creator who wants everything automated</span>
+              </li>
+              <li className="flex items-start gap-3">
+                <span className="inline-block w-2 h-2 rounded-full bg-[#4ECDC4] mt-2.5 flex-shrink-0" aria-hidden="true" />
+                <span>An agency that needs white-label backend support for clients</span>
+              </li>
+              <li className="flex items-start gap-3">
+                <span className="inline-block w-2 h-2 rounded-full bg-[#4ECDC4] mt-2.5 flex-shrink-0" aria-hidden="true" />
+                <span>A service business drowning in manual processes</span>
+              </li>
+              <li className="flex items-start gap-3">
+                <span className="inline-block w-2 h-2 rounded-full bg-[#4ECDC4] mt-2.5 flex-shrink-0" aria-hidden="true" />
+                <span>Someone who wants to SELL custom HighLevel systems</span>
+              </li>
+            </ul>
+
+            <p>
+              Answer 8 questions. We&apos;ll show you 3 custom systems we&apos;d build for
+              you, what they&apos;d replace, and how much time they&apos;d save you.
+            </p>
           </div>
         </div>
       </section>
 
-      {/* Social Proof */}
-      <section className="border-t border-white/10 bg-white/[0.02]" aria-labelledby="social-proof-heading">
-        <div className="container mx-auto px-4 py-12 md:py-16">
-          <div className="max-w-3xl mx-auto text-center">
-            <h2 id="social-proof-heading" className="sr-only">Our track record</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
-              <div>
-                <p className="text-3xl md:text-4xl font-bold text-white">Hundreds</p>
-                <p className="text-sm text-slate-400 mt-1">of HighLevel builds delivered</p>
-              </div>
-              <div>
-                <p className="text-3xl md:text-4xl font-bold text-white">10-20hrs</p>
-                <p className="text-sm text-slate-400 mt-1">saved per week on average</p>
-              </div>
-              <div>
-                <p className="text-3xl md:text-4xl font-bold text-white">2 min</p>
-                <p className="text-sm text-slate-400 mt-1">to get your custom blueprint</p>
-              </div>
-            </div>
+      {/* Mobile Photo — shown below body copy on smaller screens */}
+      <section className="container mx-auto px-4 sm:px-6 lg:px-8 pb-10 lg:hidden">
+        <div className="max-w-sm mx-auto">
+          <div className="rounded-2xl overflow-hidden shadow-xl shadow-[#4ECDC4]/10 border border-slate-100">
+            <Image
+              src="/sami-kylee.jpg"
+              alt="Sami and Kylee, the HighLevel build experts behind The Funnel Flippers"
+              width={600}
+              height={500}
+              className="w-full h-auto object-cover"
+              priority
+            />
+          </div>
+          <div className="text-center mt-4">
+            <p className="text-sm font-semibold text-slate-800">Kylee + Sami</p>
+            <p className="text-xs text-[#4ECDC4] font-medium">HighLevel Build Experts</p>
           </div>
         </div>
       </section>
 
-      {/* Bottom CTA */}
-      <section className="container mx-auto px-4 py-16 md:py-20" aria-labelledby="bottom-cta-heading">
-        <div className="max-w-2xl mx-auto text-center">
-          <h2 id="bottom-cta-heading" className="text-2xl md:text-3xl font-bold mb-4">
-            Ready to see what&apos;s possible?
-          </h2>
-          <p className="text-slate-400 mb-8">
-            8 questions. No BS. Just a real look at the systems your business actually needs.
-          </p>
+      {/* CTA Section */}
+      <section className="container mx-auto px-4 sm:px-6 lg:px-8 pb-16 md:pb-24" aria-labelledby="cta-heading">
+        <div className="max-w-3xl">
+          <h2 id="cta-heading" className="sr-only">Start your blueprint</h2>
           <button
             onClick={onStartQuiz}
-            className="inline-flex items-center gap-3 px-8 py-4 rounded-xl text-lg font-semibold bg-gradient-to-r from-indigo-500 to-purple-500 text-white hover:from-indigo-400 hover:to-purple-400 transition-all duration-200 shadow-xl shadow-indigo-500/25 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900"
-            aria-label="Start the Build Blueprint quiz"
+            className="hidden sm:inline-flex items-center gap-3 px-10 py-4 rounded-xl text-lg font-semibold bg-[#4ECDC4] text-white hover:bg-[#3DBDB5] transition-all duration-200 shadow-lg shadow-[#4ECDC4]/25 hover:shadow-xl hover:shadow-[#4ECDC4]/30 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#4ECDC4] focus-visible:ring-offset-2"
+            aria-label="Start your build blueprint"
           >
-            Start the Quiz
+            Start Your Blueprint
             <svg
               className="w-5 h-5"
               fill="none"
@@ -173,17 +175,51 @@ export function LandingPage({ onStartQuiz }: LandingPageProps) {
               />
             </svg>
           </button>
+          {/* Mobile: full-width sticky CTA at bottom */}
+          <div className="sm:hidden fixed bottom-0 left-0 right-0 p-4 bg-white/95 backdrop-blur-sm border-t border-slate-100 z-40">
+            <button
+              onClick={onStartQuiz}
+              className="w-full py-4 px-8 rounded-xl text-lg font-semibold bg-[#4ECDC4] text-white hover:bg-[#3DBDB5] transition-all duration-200 shadow-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-[#4ECDC4] focus-visible:ring-offset-2"
+              aria-label="Start your build blueprint"
+            >
+              Start Your Blueprint
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {/* Subtle credibility strip */}
+      <section className="border-t border-slate-100 bg-slate-50" aria-labelledby="credibility-heading">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-10 md:py-14">
+          <h2 id="credibility-heading" className="sr-only">Our track record</h2>
+          <div className="max-w-4xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-8 text-center">
+            <div>
+              <p className="text-3xl md:text-4xl font-bold text-slate-800">Hundreds</p>
+              <p className="text-sm text-slate-500 mt-1">of HighLevel builds delivered</p>
+            </div>
+            <div>
+              <p className="text-3xl md:text-4xl font-bold text-slate-800">10&ndash;20 hrs</p>
+              <p className="text-sm text-slate-500 mt-1">saved per week on average</p>
+            </div>
+            <div>
+              <p className="text-3xl md:text-4xl font-bold text-slate-800">2 min</p>
+              <p className="text-sm text-slate-500 mt-1">to get your custom blueprint</p>
+            </div>
+          </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-white/10">
-        <div className="container mx-auto px-4 py-6 text-center">
-          <p className="text-slate-500 text-sm">
+      <footer className="border-t border-slate-100">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 text-center">
+          <p className="text-slate-400 text-sm">
             &copy; {new Date().getFullYear()} The Funnel Flippers. Kylee + Sami | HighLevel Build Experts.
           </p>
         </div>
       </footer>
+
+      {/* Bottom padding on mobile for sticky CTA */}
+      <div className="h-20 sm:hidden" aria-hidden="true" />
     </div>
   );
 }
