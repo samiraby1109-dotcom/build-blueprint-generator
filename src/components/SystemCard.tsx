@@ -13,7 +13,7 @@ interface SystemCardProps {
 
 function InsightShimmer() {
   return (
-    <div className="space-y-3 animate-pulse">
+    <div className="space-y-3 animate-pulse" aria-hidden="true">
       <div className="h-4 bg-slate-200 rounded w-full" />
       <div className="h-4 bg-slate-200 rounded w-full" />
       <div className="h-4 bg-slate-200 rounded w-4/5" />
@@ -28,52 +28,59 @@ export function SystemCard({
   isLoadingInsight,
 }: SystemCardProps) {
   const [showDetails, setShowDetails] = useState(false);
+  const detailsId = `system-details-${system.id}`;
 
   return (
-    <div className="bg-white rounded-2xl shadow-lg border border-slate-100 overflow-hidden">
+    <article
+      className="bg-white rounded-2xl shadow-md border border-slate-100 overflow-hidden"
+      aria-labelledby={`system-name-${system.id}`}
+    >
       {/* Header */}
-      <div className="bg-gradient-to-r from-indigo-600 to-purple-600 px-6 py-5">
-        <div className="flex items-center gap-4">
-          <span className="flex items-center justify-center w-10 h-10 rounded-full bg-white/20 text-white font-bold text-lg">
+      <div className="bg-gradient-to-r from-indigo-600 to-purple-600 px-5 py-4 sm:px-6 sm:py-5">
+        <div className="flex items-center gap-3 sm:gap-4">
+          <span
+            className="flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white/20 text-white font-bold text-base sm:text-lg flex-shrink-0"
+            aria-hidden="true"
+          >
             {index + 1}
           </span>
-          <div>
-            <h3 className="text-xl md:text-2xl font-bold text-white">
+          <div className="min-w-0">
+            <h3
+              id={`system-name-${system.id}`}
+              className="text-lg sm:text-xl md:text-2xl font-bold text-white leading-tight"
+            >
               {system.name}
             </h3>
-            <div className="flex items-center gap-4 mt-1 text-indigo-200 text-sm">
-              <span>{system.timeSaved} saved</span>
-              <span>|</span>
-              <span>{system.priceRange}</span>
-            </div>
+            <p className="text-indigo-200 text-sm mt-0.5">
+              Saves {system.timeSaved}
+            </p>
           </div>
         </div>
       </div>
 
-      <div className="p-6 md:p-8">
+      <div className="p-5 sm:p-6 md:p-8">
         {/* AI personalized insight — the main content */}
         {isLoadingInsight ? (
-          <div className="mb-6">
+          <div className="mb-5">
             <InsightShimmer />
           </div>
         ) : aiInsight ? (
-          <div className="mb-6">
-            <div className="space-y-4 text-slate-700 text-base md:text-lg leading-relaxed">
+          <div className="mb-5">
+            <div className="space-y-3 text-slate-700 text-sm sm:text-base leading-relaxed">
               {aiInsight.split(/\n\n+/).map((paragraph, i) => (
                 <p key={i}>{paragraph}</p>
               ))}
             </div>
           </div>
         ) : (
-          /* Fallback: show the static description if no AI */
-          <p className="text-slate-600 leading-relaxed mb-6">
+          <p className="text-slate-600 leading-relaxed mb-5 text-sm sm:text-base">
             {system.description}
           </p>
         )}
 
         {/* Real example — social proof */}
-        <div className="bg-slate-50 rounded-xl p-4 mb-6 border-l-4 border-indigo-500">
-          <p className="text-slate-700 italic">
+        <div className="bg-slate-50 rounded-xl p-4 mb-5 border-l-4 border-indigo-500">
+          <p className="text-slate-700 italic text-sm sm:text-base">
             &quot;{system.realExample}&quot;
           </p>
         </div>
@@ -81,7 +88,9 @@ export function SystemCard({
         {/* Expandable details */}
         <button
           onClick={() => setShowDetails(!showDetails)}
-          className="flex items-center gap-2 text-indigo-600 font-medium hover:text-indigo-700 transition-colors duration-200"
+          aria-expanded={showDetails}
+          aria-controls={detailsId}
+          className="flex items-center gap-2 text-indigo-600 font-medium hover:text-indigo-700 transition-colors duration-200 text-sm focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 rounded-md px-1 -mx-1"
         >
           <svg
             className={cn(
@@ -92,6 +101,7 @@ export function SystemCard({
             viewBox="0 0 24 24"
             stroke="currentColor"
             strokeWidth={2}
+            aria-hidden="true"
           >
             <path
               strokeLinecap="round"
@@ -103,21 +113,25 @@ export function SystemCard({
         </button>
 
         {showDetails && (
-          <div className="mt-4 pt-4 border-t border-slate-100 space-y-6 animate-in fade-in duration-200">
-            {/* Two-column layout on desktop */}
-            <div className="grid md:grid-cols-2 gap-6">
+          <div
+            id={detailsId}
+            className="mt-4 pt-4 border-t border-slate-100 space-y-6"
+            role="region"
+            aria-label={`Details for ${system.name}`}
+          >
+            <div className="grid sm:grid-cols-2 gap-6">
               {/* What it replaces */}
               <div>
-                <h4 className="font-semibold text-slate-800 mb-3 text-sm uppercase tracking-wide text-red-600">
+                <h4 className="font-semibold mb-3 text-xs uppercase tracking-wide text-red-600">
                   What it replaces
                 </h4>
-                <ul className="space-y-2">
+                <ul className="space-y-2" aria-label="What this system replaces">
                   {system.replaces.map((item, i) => (
                     <li
                       key={i}
                       className="flex items-start gap-2 text-slate-600 text-sm"
                     >
-                      <span className="text-red-400 mt-0.5 flex-shrink-0">
+                      <span className="text-red-400 mt-0.5 flex-shrink-0" aria-hidden="true">
                         &times;
                       </span>
                       <span>{item}</span>
@@ -128,10 +142,10 @@ export function SystemCard({
 
               {/* What it includes */}
               <div>
-                <h4 className="font-semibold text-slate-800 mb-3 text-sm uppercase tracking-wide text-green-600">
+                <h4 className="font-semibold mb-3 text-xs uppercase tracking-wide text-green-600">
                   What it includes
                 </h4>
-                <ul className="space-y-2">
+                <ul className="space-y-2" aria-label="What this system includes">
                   {system.includes.map((item, i) => (
                     <li
                       key={i}
@@ -143,6 +157,7 @@ export function SystemCard({
                         viewBox="0 0 24 24"
                         stroke="currentColor"
                         strokeWidth={2}
+                        aria-hidden="true"
                       >
                         <path
                           strokeLinecap="round"
@@ -159,6 +174,6 @@ export function SystemCard({
           </div>
         )}
       </div>
-    </div>
+    </article>
   );
 }

@@ -27,15 +27,18 @@ export function TextQuestion({
 
   return (
     <div className="w-full max-w-2xl mx-auto">
-      <h2 className="text-2xl md:text-3xl font-bold text-slate-800 mb-2 text-center">
-        {title}
-      </h2>
-      <p className="text-slate-500 text-center mb-8">
-        This is optional, but helps us understand your unique needs
-      </p>
+      <label htmlFor="text-question" className="block">
+        <span className="block text-xl sm:text-2xl md:text-3xl font-bold text-slate-800 mb-2 text-center">
+          {title}
+        </span>
+        <span className="block text-slate-500 text-center mb-6 md:mb-8 text-sm">
+          This is optional, but helps us understand your unique needs
+        </span>
+      </label>
 
       <div className="relative">
         <textarea
+          id="text-question"
           value={value}
           onChange={(e) => {
             const newValue = e.target.value;
@@ -47,9 +50,10 @@ export function TextQuestion({
           onBlur={() => setIsFocused(false)}
           placeholder={placeholder}
           rows={5}
+          aria-describedby="char-counter"
           className={cn(
             'w-full p-4 rounded-xl border-2 transition-all duration-200 resize-none',
-            'text-slate-700 placeholder-slate-400',
+            'text-slate-700 placeholder-slate-400 text-sm sm:text-base',
             'focus:outline-none focus:ring-0',
             isFocused
               ? 'border-indigo-500 bg-white shadow-md'
@@ -58,7 +62,7 @@ export function TextQuestion({
         />
 
         {/* Character counter */}
-        <div className="absolute bottom-3 right-3 text-sm">
+        <div id="char-counter" className="absolute bottom-3 right-3 text-xs sm:text-sm" aria-live="polite">
           <span
             className={cn(
               'font-medium',
@@ -67,13 +71,13 @@ export function TextQuestion({
           >
             {remainingChars}
           </span>
-          <span className="text-slate-400"> characters left</span>
+          <span className="text-slate-400"> left</span>
         </div>
       </div>
 
       {/* After message */}
       {showAfterMessage && afterMessage && value.length > 0 && (
-        <div className="mt-8 p-4 bg-gradient-to-r from-indigo-50 to-purple-50 rounded-xl border border-indigo-100">
+        <div className="mt-6 p-4 bg-gradient-to-r from-indigo-50 to-purple-50 rounded-xl border border-indigo-100" role="status">
           <p className="text-slate-700 text-sm md:text-base leading-relaxed">
             {afterMessage}
           </p>

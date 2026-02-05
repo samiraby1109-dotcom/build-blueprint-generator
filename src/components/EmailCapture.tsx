@@ -46,10 +46,13 @@ export function EmailCapture({ onSubmit, isLoading }: EmailCaptureProps) {
   return (
     <div className="w-full max-w-lg mx-auto">
       {/* Heading */}
-      <div className="text-center mb-8">
-        <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 mb-6">
+      <div className="text-center mb-6 md:mb-8">
+        <div
+          className="inline-flex items-center justify-center w-14 h-14 md:w-16 md:h-16 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 mb-5"
+          aria-hidden="true"
+        >
           <svg
-            className="w-8 h-8 text-white"
+            className="w-7 h-7 md:w-8 md:h-8 text-white"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -62,24 +65,24 @@ export function EmailCapture({ onSubmit, isLoading }: EmailCaptureProps) {
             />
           </svg>
         </div>
-        <h2 className="text-3xl md:text-4xl font-bold text-slate-800 mb-3">
+        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-slate-800 mb-2">
           Your Build Blueprint is ready
         </h2>
-        <p className="text-lg text-slate-600">
-          Drop your email and we&apos;ll send you the full blueprint showing the 3
-          custom systems we&apos;d build for your business
+        <p className="text-base sm:text-lg text-slate-600">
+          Enter your info to see the 3 custom systems we&apos;d build for your business
         </p>
       </div>
 
       {/* Form */}
-      <form onSubmit={handleSubmit} className="space-y-5">
+      <form onSubmit={handleSubmit} className="space-y-4" noValidate>
         {/* First Name */}
         <div>
           <label
             htmlFor="firstName"
-            className="block text-sm font-medium text-slate-700 mb-2"
+            className="block text-sm font-medium text-slate-700 mb-1.5"
           >
-            First Name <span className="text-red-500">*</span>
+            First Name <span className="text-red-500" aria-hidden="true">*</span>
+            <span className="sr-only">(required)</span>
           </label>
           <input
             id="firstName"
@@ -87,9 +90,13 @@ export function EmailCapture({ onSubmit, isLoading }: EmailCaptureProps) {
             value={firstName}
             onChange={(e) => setFirstName(e.target.value)}
             placeholder="Your first name"
+            autoComplete="given-name"
+            aria-required="true"
+            aria-invalid={!!errors.firstName}
+            aria-describedby={errors.firstName ? 'firstName-error' : undefined}
             className={cn(
               'w-full px-4 py-3 rounded-xl border-2 transition-all duration-200',
-              'text-slate-700 placeholder-slate-400',
+              'text-slate-700 placeholder-slate-400 text-sm sm:text-base',
               'focus:outline-none focus:ring-0 focus:border-indigo-500',
               errors.firstName
                 ? 'border-red-300 bg-red-50'
@@ -97,7 +104,9 @@ export function EmailCapture({ onSubmit, isLoading }: EmailCaptureProps) {
             )}
           />
           {errors.firstName && (
-            <p className="mt-1 text-sm text-red-500">{errors.firstName}</p>
+            <p id="firstName-error" className="mt-1 text-sm text-red-500" role="alert">
+              {errors.firstName}
+            </p>
           )}
         </div>
 
@@ -105,9 +114,10 @@ export function EmailCapture({ onSubmit, isLoading }: EmailCaptureProps) {
         <div>
           <label
             htmlFor="email"
-            className="block text-sm font-medium text-slate-700 mb-2"
+            className="block text-sm font-medium text-slate-700 mb-1.5"
           >
-            Email <span className="text-red-500">*</span>
+            Email <span className="text-red-500" aria-hidden="true">*</span>
+            <span className="sr-only">(required)</span>
           </label>
           <input
             id="email"
@@ -115,9 +125,13 @@ export function EmailCapture({ onSubmit, isLoading }: EmailCaptureProps) {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="you@example.com"
+            autoComplete="email"
+            aria-required="true"
+            aria-invalid={!!errors.email}
+            aria-describedby={errors.email ? 'email-error' : undefined}
             className={cn(
               'w-full px-4 py-3 rounded-xl border-2 transition-all duration-200',
-              'text-slate-700 placeholder-slate-400',
+              'text-slate-700 placeholder-slate-400 text-sm sm:text-base',
               'focus:outline-none focus:ring-0 focus:border-indigo-500',
               errors.email
                 ? 'border-red-300 bg-red-50'
@@ -125,7 +139,9 @@ export function EmailCapture({ onSubmit, isLoading }: EmailCaptureProps) {
             )}
           />
           {errors.email && (
-            <p className="mt-1 text-sm text-red-500">{errors.email}</p>
+            <p id="email-error" className="mt-1 text-sm text-red-500" role="alert">
+              {errors.email}
+            </p>
           )}
         </div>
 
@@ -133,9 +149,9 @@ export function EmailCapture({ onSubmit, isLoading }: EmailCaptureProps) {
         <div>
           <label
             htmlFor="phone"
-            className="block text-sm font-medium text-slate-700 mb-2"
+            className="block text-sm font-medium text-slate-700 mb-1.5"
           >
-            Phone <span className="text-slate-400">(optional)</span>
+            Phone <span className="text-slate-400 text-xs">(optional)</span>
           </label>
           <input
             id="phone"
@@ -143,9 +159,10 @@ export function EmailCapture({ onSubmit, isLoading }: EmailCaptureProps) {
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
             placeholder="(555) 123-4567"
+            autoComplete="tel"
             className={cn(
               'w-full px-4 py-3 rounded-xl border-2 transition-all duration-200',
-              'text-slate-700 placeholder-slate-400',
+              'text-slate-700 placeholder-slate-400 text-sm sm:text-base',
               'focus:outline-none focus:ring-0 focus:border-indigo-500',
               'border-slate-200 bg-white hover:border-slate-300'
             )}
@@ -157,11 +174,11 @@ export function EmailCapture({ onSubmit, isLoading }: EmailCaptureProps) {
           type="submit"
           disabled={isLoading}
           className={cn(
-            'w-full py-4 px-6 rounded-xl font-semibold text-lg transition-all duration-200',
+            'w-full py-3.5 px-6 rounded-xl font-semibold text-base sm:text-lg transition-all duration-200',
             'bg-gradient-to-r from-indigo-600 to-purple-600',
             'hover:from-indigo-700 hover:to-purple-700',
             'text-white shadow-lg hover:shadow-xl',
-            'focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2',
+            'focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2',
             isLoading && 'opacity-70 cursor-not-allowed'
           )}
         >
@@ -172,6 +189,7 @@ export function EmailCapture({ onSubmit, isLoading }: EmailCaptureProps) {
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
+                aria-hidden="true"
               >
                 <circle
                   className="opacity-25"
@@ -196,9 +214,8 @@ export function EmailCapture({ onSubmit, isLoading }: EmailCaptureProps) {
       </form>
 
       {/* Privacy note */}
-      <p className="mt-6 text-center text-sm text-slate-500">
-        We respect your inbox. No spam, just your blueprint and occasional
-        HighLevel tips.
+      <p className="mt-5 text-center text-xs sm:text-sm text-slate-500">
+        No spam. Just your blueprint and occasional HighLevel tips.
       </p>
     </div>
   );
